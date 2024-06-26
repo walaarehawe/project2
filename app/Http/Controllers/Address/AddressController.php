@@ -20,7 +20,7 @@ class AddressController extends Controller
   private AddressServices $addressServices;
   public function __construct(AddressServices $addressServices)
   {
-    $this->addressServices = $addressServices;
+    $this->addressServices => $addressServices;
   }
 
        public function store(Request $request)
