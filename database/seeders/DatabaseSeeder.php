@@ -18,7 +18,9 @@ class DatabaseSeeder extends Seeder
             
             RolePermissionsSeeder::class,
             OrderTypeSeeder::class,
-            TypeTable::class
+            TypeTable::class,
+            TimesTableSeeder::class
+
         ]);
        
 

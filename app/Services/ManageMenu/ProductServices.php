@@ -41,7 +41,7 @@ class ProductServices  extends CRUDServices
     ->where('category_id','=',$request->id)
     ->leftJoin('product_types', 'product_types.Category_id', '=', 'Categories.id')
     ->leftJoin('products', 'products.id', '=', 'product_types.product_id')
-    ->get(['product_types.name as product_name','Products.product_information','Products.product_path','product_types.category_id' , 'Categories.category_name', 'product_types.id']);
+    ->get(['product_types.name as product_name','Products.total_ratings','Products.product_information','Products.product_path','product_types.category_id' , 'Categories.category_name', 'product_types.id']);
  
     return [
         'message' => 'show with filter succ',

@@ -49,10 +49,7 @@ public function code(Request $request){
 
 
 
-public function userstory(Request $request){
 
-  return"As a $request->actor I want to $request->usecase ,So I can $request->acc";
-}
 
 
 

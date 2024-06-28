@@ -13,12 +13,19 @@ use App\Http\Controllers\Order\OrderInternalController;
 use App\Http\Controllers\Order\OrderLocalController;
 use App\Http\Controllers\PreparatioSection\HeadPreparationController;
 use App\Http\Controllers\Table\TableController;
+use App\Http\Controllers\Reservation\ReservaionController;
 use App\Models\Order\OrderExternalUser;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\ManageMenu\RatingController;
 
 use Illuminate\Support\Facades\Route;
+
+
+
+    Route::post('AddReservation', [ReservaionController::class,'AddReservation']);
+    Route::post('select', [ReservaionController::class,'select']);
+
 
 //Manage Section
 Route::post('DeleteSection', [SectionController::class, 'DeleteSection']);

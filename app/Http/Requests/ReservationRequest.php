@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProductTypeRequestp extends FormRequest
+class ReservationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,11 @@ class ProductTypeRequestp extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            // 'user_id'=>'required',
+            'Date'=>'required',
+            'table_status'=>'required',
+            'persons'=>'required',
+            'time_id'=>'required'
         ];
     }
 }
