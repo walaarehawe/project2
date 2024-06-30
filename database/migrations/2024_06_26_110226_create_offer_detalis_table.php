@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('order_external_users', function (Blueprint $table) {
+        Schema::create('offer_detalis', function (Blueprint $table) {
             $table->id();
-           $table->foreignId('user_address_id')->constrained('user_addresses')->onDelete('cascade');
-            $table->integer('order_id')->unsigned();
-            $table->foreign('order_id')->references('id')->on('orders');
+            $table->integer('product_id')->unsigned();
+            $table->integer('amount');
+            $table->foreign('product_id')->references('id')->on('product_types');
+            $table->foreignId('offer_id')->constrained('offers')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('order_external_users');
+        Schema::dropIfExists('offer_detalis');
     }
 };

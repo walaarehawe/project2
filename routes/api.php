@@ -17,7 +17,9 @@ use App\Models\Order\OrderExternalUser;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\ManageMenu\RatingController;
-
+use App\Http\Controllers\Offer\OfferController;
+use App\Http\Controllers\Offer\OfferDetailsController;
+use App\Http\Controllers\Order\OrderDetalisController;
 use Illuminate\Support\Facades\Route;
 
 //Manage Section
@@ -79,12 +81,15 @@ Route::group(['prefix' => 'orderLocal'], function () {
 Route::group(['prefix' => 'External', 'middleware' => 'auth:sanctum'], function () {
     Route::post('store', [OrderExternalController::class, 'store']);
     Route::post('show', [OrderExternalController::class, 'show']);
+  
+
 });
 
 Route::group(['prefix' => 'table'], function () {
     Route::post('store', [TableController::class, 'store']);
     Route::get('index', [TableController::class, 'index']);
     Route::post('show', [TableController::class, 'show']);
+    Route::post('Delete', [TableController::class, 'show']);
 });
 
 Route::group(['prefix' => 'tablestatus'], function () {
@@ -104,5 +109,39 @@ Route::group(['prefix' => 'Address', 'middleware' => 'auth:sanctum'], function (
     Route::post('storeaddress', [AddressController::class, 'store']);
     Route::post('showAddress', [AddressController::class, 'show']);
 });
+Route::group(['prefix' => 'offers'], function () {
+    Route::post('store', [OfferController::class, 'store']);
+});
+Route::group(['prefix' => 'offers'], function () {
+    Route::post('store', [OfferController::class, 'store']);
+    Route::post('index', [OfferController::class, 'index']);
+    Route::post('update', [OfferController::class, 'update']);
+    Route::post('Delete', [OfferController::class, 'Delete']);
+    Route::post('search', [OfferController::class, 'search']);
 
-Route::post('ex', [HeadPreparationController::class, 'ex']);
+
+});
+Route::group(['prefix' => 'offersDetalis'], function () {
+    Route::post('store', [OfferDetailsController::class, 'store']);
+    Route::post('index', [OfferDetailsController::class, 'index']);
+    Route::post('show', [OfferDetailsController::class, 'show']);
+    Route::post('update', [OfferDetailsController::class, 'update']);
+    Route::post('Delete', [OfferDetailsController::class, 'Delete']);
+});
+
+
+
+
+Route::group(['prefix' => 'e', 'middleware' => 'auth:sanctum'], function () {
+  
+    Route::post('getadderss', [ InvoiceController::class, 'getadderss']);
+
+});
+Route::group(['prefix' => 'OrderDetalis', 'middleware' => 'auth:sanctum'], function () {
+  
+    Route::post('getUnpaidOrdersByUserId', [OrderDetalisController::class, 'getUnpaidOrdersByUserId']);
+    Route::post('orderDetalis', [OrderDetalisController::class, 'orderDetalis']);
+
+
+});
+

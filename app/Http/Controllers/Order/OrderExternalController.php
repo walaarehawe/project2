@@ -10,7 +10,9 @@ use App\Models\Order\OrderExternalUser;
 use App\Models\ProductType;
 use App\Models\TypeOrder;
 use App\HTTP\Responses\ResponseService;
+use App\Services\Order\OrderOfferServices;
 use Exception;
+
 use Throwable;
 
 use App\Services\Order\OrderExternalService;
@@ -30,7 +32,7 @@ class OrderExternalController extends Controller
   {
 
     try {
-      $order = $this->order->order2($request);
+       return $order = $this->order->order2($request);
       if ($order == 'product not found') {
         return ResponseService::error("product not found", "");
       }
@@ -46,8 +48,6 @@ class OrderExternalController extends Controller
 
   public function show()
   {
-    // $order=Order::find(20);
-    // return $order->orderExternal->with('adderess');
     return  $authors = OrderExternalUser::whereHas('order', function ($query) {
       $query->where('order_id', '=', 20)->select('id');
     })->with([

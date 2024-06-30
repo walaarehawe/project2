@@ -87,6 +87,9 @@ class OrderLocalService extends CRUDServices
         $data2['type_id'] = OrderType::LOCAL;
         $order = Order::create($data2);
         $order_id = $order->id;
+        if($request->input('offers')){
+        OrderOfferServices::storeOrderOffer($request, $order_id);
+        }
        $this->addDetalisToOrder($request,$order_id); 
        $this->calculateTotalPrice($order_id);
        Db::commit();
