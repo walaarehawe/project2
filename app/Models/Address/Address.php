@@ -10,6 +10,7 @@ class Address extends Model
     use HasFactory;
     protected $table='addresses';
     protected $fillable = ['name', 'parent_id'];
+
     public function parent()
     {
         return $this->belongsTo(Address::class, 'parent_id');
@@ -30,4 +31,5 @@ class Address extends Model
         }
         return $ancestors[0];
     }
+    
 }

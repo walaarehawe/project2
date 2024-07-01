@@ -16,7 +16,7 @@ final class TypeTabel
         return [
             TypeTabel::INTERNAL,
             TypeTabel::EXTERNAL,
-   
+    
         ];
     }
 }

@@ -73,4 +73,8 @@ class TableController extends Controller
             return ResponseService::error($exception->getMessage(), 'An error occurred');
         }
     }
+    public function Delete(Request $request){
+        $data =$this->table->delete($request);
+        return ResponseService::success($data['message'] , $data['data']);
+      }
 }

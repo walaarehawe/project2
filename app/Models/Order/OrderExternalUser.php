@@ -12,20 +12,26 @@ use Illuminate\Database\Eloquent\Model;
 class OrderExternalUser extends Model
 {
     use HasFactory;
-    protected $guarded =[];
-    public function order(){
+    protected $guarded = [];
+    protected $hidden = ['created_at', 'updated_at'];
+    public function order()
+    {
         return $this->belongsTo(Order::class);
-        }
-    public function street(){
-        return $this->belongsTo(Street::class,'street_id');
-        }
-    public function adder(){
-        return $this->belongsTo(Address::class,'address_id');
-        }
-    public function user(){
+    }
+    public function street()
+    {
+        return $this->belongsTo(Street::class, 'street_id');
+    }
+    public function adder()
+    {
+        return $this->belongsTo(Address::class, 'address_id');
+    }
+    public function user()
+    {
         return $this->belongsTo(User::class);
-        }
-    public function userAddress(){
+    }
+    public function userAddress()
+    {
         return $this->belongsTo(UserAddress::class);
-        }
+    }
 }

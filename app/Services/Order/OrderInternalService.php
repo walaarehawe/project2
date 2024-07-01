@@ -99,6 +99,9 @@ class OrderInternalService extends CRUDServices
             if ($id == 'errotable') {
                 return 'errotable';
             }
+            if($request->input('offers')){
+            OrderOfferServices::storeOrderOffer($request,  $id);
+            }
             $order_detalis = $this->addDetalisToOrder($request, $id);
             if($order_detalis=='product not found'){
                 return 'product not found';

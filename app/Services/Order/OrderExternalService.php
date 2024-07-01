@@ -7,6 +7,7 @@ use App\Enums\StatusTable;
 use Throwable;
 use App\HTTP\Responses\ResponseService;
 use App\Models\Address\Address;
+use App\Models\Address\UserAddress;
 use App\Models\Order\Order;
 use App\Models\Order\OrderDetalis;
 use App\Models\Order\OrderExternalUser;
@@ -49,11 +50,17 @@ class OrderExternalService extends CRUDServices
         $id = $order->id;
 
         $user_id = Auth::id();
+        $addressId = $request->address_id;
+        $userAddress = UserAddress::where('address_id', $addressId)
+            ->where('user_id', $user_id)
+            ->first(); 
+              
+
+
         $order2 = OrderExternalUser::create(
             [
                 'order_id' => $id,
-                'user_id' => $user_id,
-                'address_id' => $request->address_id,
+                'user_address_id' => $userAddress->id,
             ]
         );
 
@@ -64,9 +71,9 @@ class OrderExternalService extends CRUDServices
 
         $products = $request->input('products');
         foreach ($products as $product) {
-            $product_id=  ProductType::where('name', $product['product_name'])->first();
-            if(!$product_id){
-            
+            $product_id =  ProductType::where('name', $product['product_name'])->first();
+            if (!$product_id) {
+
                 return 'product not found';
             }
             $total_price = $product['price_per_one'] * $product['amount'];
@@ -83,19 +90,19 @@ class OrderExternalService extends CRUDServices
     }
     public function order2($request)
     {
-
-
         DB::beginTransaction();
-        $address=Address::find($request->address_id);
-        if(!$address){
+        $address = Address::find($request->address_id);
+        if (!$address) {
             return 'address not found';
         }
-
         try {
             $id = $this->o($request);
             $order_detalis = $this->addDetalisToOrder($request, $id);
-            if($order_detalis=='product not found'){
+            if ($order_detalis == 'product not found') {
                 return 'product not found';
+            }
+            if($request->input('offers')){
+            OrderOfferServices::storeOrderOffer($request,  $id);
             }
             $this->calculateTotalPrice($id);
             DB::commit();

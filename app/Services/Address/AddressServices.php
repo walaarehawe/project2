@@ -33,7 +33,7 @@ class AddressServices
                 $ParentId = $parent->id;
                 $result[] = $ParentId;
             }}
-        $d = UserAddress::create([
+        $d = UserAddress::firstOrCreate([
             'user_id' => Auth::id(),
             'address_id' => $ParentId,
         ]);
