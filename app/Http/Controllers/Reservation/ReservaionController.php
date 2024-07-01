@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use App\Models\Reservation\Reservation;
 use Laravel\Sanctum\PersonalAccessToken;
 use Throwable;
+use App\Models\TableSize;
+use App\Models\Table\Table;
 use App\Enums\SizeTable;
 use Illuminate\Support\Collection;
 
@@ -23,29 +25,53 @@ class ReservaionController extends Controller
     private ReservationServices $reservationServices;
     public function __construct(ReservationServices $reservationServices)
     {
-      $this->reservationServices = $reservationServices;
+        $this->reservationServices = $reservationServices;
 
     }
-    public function AddReservation(ReservationRequest $request , int $size)
+    public function time(Request $request)
     {
+    $data = $this->reservationServices->time($request->all());
+   
+return $data;
+}
+    public function AddReservation(ReservationRequest $request)
+    {
+
         try {
-          $tr=$request->validated();
-          $token = PersonalAccessToken::findToken($request->bearerToken());
-          $tr['user_id']=$token->tokenable->id;
+            // echo 98;
+            $token = PersonalAccessToken::findToken($request->bearerToken());
+            $user_id=$token->tokenable->id;
+            $data = $this->reservationServices->person($request->validated() , $user_id);
 
-          $data = $this->reservationServices->create($tr);
-        
-        //  $rr=$re->validated();
-         $rr['reservation_id']= $data['data']['id'];
-         $rr['size_id']=$size;
-         $data =TableReservations::create($rr);
-          return ResponseService::success($data);       
-        }
-         catch (Throwable $exception) {
-          return ResponseService::error( $exception->getMessage() , 'An error occurred');
+            return ResponseService::success($data);
+        } catch (Throwable $exception) {
+            return ResponseService::error($exception->getMessage(), 'An error occurred');
         }
     }
 
+    //     public function AddReservation(ReservationRequest $request )
+//     {
+//     try {
+//       $tr=$request->validated();
+//       $token = PersonalAccessToken::findToken($request->bearerToken());
+//       $tr['user_id']=$token->tokenable->id;
+// $data = Reservation::firstOrCreate($tr);
+//       return $data['id'];       
+//     }
+//       catch (Throwable $exception) {
+//       return ResponseService::error( $exception->getMessage() , 'An error occurred');
+//     }
+//     }
+    // public function AddTableReservation($id, int $size , int $emptytable)
+    // {
+    // $rr['reservation_id']= $id;
+    // $rr['size_id']=$size;
+    // $rr['table_id']=$emptytable;
+
+    // $data =TableReservations::create($rr);
+    // return $data;  
+
+    // }
 
 
 
@@ -55,59 +81,168 @@ class ReservaionController extends Controller
 
 
 
+    // public function person(ReservationRequest $request )
+    // {
+    // $person = $request->persons;
+    // $date = $request->Date;
+    // $time_id=$request->time_id;
+    // $type_id =$request->table_status;
+    // $Reservation=Reservation::with('Type')->where('Date',$date)->where('table_status',$type_id)->where('time_id',$time_id)->get(); 
+    // $collection2=collect([]);
+    // $collection4=collect([]);
+    // $collection6=collect([]);
+    // foreach($Reservation as $reservation){
+    // $type =$reservation->type->all();
+    // foreach($type as $types){
+    // $size_id=$types->size_id;
+    // switch($size_id){
+    //   case 1: 
+    //     $collection2->push($types);
+    //     break;  
+    //     case 2: 
+    //       $collection4->push($types);
+    //       break;  
+    //       case 3: 
+    //         $collection6->push($types);
+    //         break;  
+    //     default;  
+    //   } }}
+    //   if($person <=2){
+    // $res =$this->check($type_id ,$collection2->count(),2);
+    // if( $res) {
+    //   $reser =$this->select($request,$res[0] , $collection2 ,$res[1] );
+    //   return $reser;    
+    //   } 
+    //   $res =$this->check($type_id ,$collection4->count(),4);
+    //   if( $res) {
+    //     $reser =$this->select($request,$res[0] , $collection2 ,$res[1] );
+    //     return $reser;    
+    //     } 
+    //     $res =$this->check($type_id ,$collection6->count(),6);
+    //     if($res) {
+    //       $reser =$this->select($request,$res[0] , $collection6 ,$res[1] );
+    //       return $reser;    
+    //       } 
+
+    //   return "لا يوجد مكان للحجز";
+    //   }
+    // elseif($person <=4){
+    // $res =$this->check($type_id ,$collection4->count(),4);
+    //     if( $res) {
+    // $reser =$this->select($request,$res[0] , $collection4 ,$res[1] );
+    // return $reser;    
+    // } 
+    // $res =$this->check($type_id ,$collection2->count()+1,2);
+    // if($res) {
+    //   $reser =$this->select($request,$res[0] , $collection2 ,$res[1] );
+    //   $collection2->push($reser);
+    //   $reser =$this->select($request,$res[0] , $collection2 ,$res[1] );
+    //   return $reser;
+    // }
+    //   return "فيش طاولة ";
+    //     } 
+
+    //     elseif($person <=6){
+    //       $res =$this->check($type_id ,$collection6->count(),6);
+    //       if( $res) {
+    //       $reser =$this->select($request,$res[0] , $collection6 ,$res[1] );
+    //       return $reser;    
+    //       } 
+    //       $res1 =$this->check($type_id ,$collection4->count(),4);
+    //       $res2 =$this->check($type_id ,$collection2->count(),2);
+
+    //       if($res1 && $res2) {
+    //         $reser =$this->select($request,$res1[0] , $collection4 ,$res1[1] );
+    //         $reser =$this->select($request,$res2[0] , $collection2 ,$res2[1] );
+    //         return $reser;
+    //       }
+    //       $res =$this->check($type_id ,$collection2->count()+2,2);
+    //       if($res) {
+    //         $reser =$this->select($request,$res[0] , $collection2 ,$res[1] );
+    //         $collection2->push($reser);
+    //         $reser =$this->select($request,$res[0] , $collection2 ,$res[1] );
+    //         $collection2->push($reser);
+    //         $reser =$this->select($request,$res[0] , $collection2 ,$res[1] );
+    //         return $reser;
+    //       }
+    //       $res =$this->check($type_id ,$collection4->count()+1,4);
+    //       if($res) {
+    //         $reser =$this->select($request,$res[0] , $collection4 ,$res[1] );
+    //         $collection4->push($reser);
+    //         $reser =$this->select($request,$res[0] , $collection4 ,$res[1] );
+    //         return $reser;
+    //       }}       
+    //       elseif($person <=8){
+    //         $res =$this->check($type_id ,$collection4->count()+1,4);
+    //         if($res) {
+    //           $reser =$this->select($request,$res[0] , $collection4 ,$res[1] );
+    //           $collection4->push($reser);
+    //           $reser =$this->select($request,$res[0] , $collection4 ,$res[1] );
+    //           return $reser;
+    //         }
+    //         $res1 =$this->check($type_id ,$collection6->count(),6);
+    //         $res2 =$this->check($type_id ,$collection2->count(),2);
+
+    //         if($res1 && $res2) {
+    //           $reser =$this->select($request,$res1[0] , $collection6 ,$res1[1] );
+    //           $reser =$this->select($request,$res2[0] , $collection2 ,$res2[1] );
+    //           return $reser;
+    //         }
+    //         $res =$this->check($type_id ,$collection2->count()+3,2);
+    //         if($res) {
+    //           $reser =$this->select($request,$res[0] , $collection2 ,$res[1] );
+    //           $collection2->push($reser);
+    //           $reser =$this->select($request,$res[0] , $collection2 ,$res[1] );
+    //           $collection2->push($reser);
+    //           $reser =$this->select($request,$res[0] , $collection2 ,$res[1] );
+    //           return $reser;
+    //         }
+    //         return "فيش طاولة ";
+    //           } 
+    // }
 
 
-    public function select(ReservationRequest $request )
-    {
-      $person = $request->persons;
-      $date = $request->Date;
 
-      if($person>=7)
-{
-  $Reservation=Reservation::with('Type')->where('Date',$date)->get(); 
-// return  $Reservation;
-  $collection = collect([]);
-  foreach($Reservation as $reservation){
-    $type =$reservation->type->all();
-    foreach($type as $types){
-    $size_id=$types->size_id;
-    if($size_id &&$size_id==2){
-      $collection->push($types);
-    }
+    // public function check( $type_id , $collection , $size_id)
+    // {
+    // $table = collect([]);
+    // $TableSize = TableSize::where('type' , $type_id)->where('size', $size_id)->first();
+    // $count6 =$TableSize->count;
+    // $tables = Table::where('type_id' , $type_id)->where('size_id', $TableSize->id)->get();
+    // foreach($tables as $tt){
+    // $table->push($tt['id']);
+    // }    
+    // echo $count6;
+    // echo $collection;
 
-  }
-    }
-    // $requests ['size_id']=6;
-    echo 1;
-  //  $rt =TableReservationRequest::validated( $requests);
-  //  echo 2;
-  // return $requests;
-//    $requests = new TableReservationRequest; // Create an instance of the request class
-// $rt = $requests->validated($requests->all());
-
-   $count6 = SizeTable::six;
-  if($collection->count()<$count6){
-    $size=1;
-$rr= $this->AddReservation($request ,$size);
-return $rr ;
-  }
+    // if ( $count6 > $collection ) 
+    // return [$table ,$TableSize->id] ;
+    // return [];
+    // }
 
 
-
-
-
-
-
-  // return  $collection->count();
-  // print_r($collection);
-  // return $t6;
-
-  // $r=$t6->where('size_id',1)->all(); 
-// echo $t6;
+    // public function select(ReservationRequest $request ,$table, $collection , $size_id)
+    // {
+    // foreach(  $collection as $types){
+    // $table_id=$types->table_id;
+    // if($table_id){
+    // if ($table->contains($table_id)){
+    // $table = $table->reject(function ($value ) use ($table_id) {
+    //   return $value === $table_id;
+    // });
+    // }
+    // }
+    // }
+    // if(!$table->isEmpty()){
+    // $emptytable = $table->first();
+    // $ro= $this->AddReservation($request  );
+    // $rr= $this->AddTableReservation($ro ,$size_id ,$emptytable);
+    // return $rr ;
+    // }
+    // return null;
+    //  }
 }
 
-// return $ty->size_id;
-    }
 
 
 
@@ -118,4 +253,3 @@ return $rr ;
 
 
 
-}

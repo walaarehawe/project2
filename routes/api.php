@@ -22,8 +22,9 @@ use App\Http\Controllers\ManageMenu\RatingController;
 use Illuminate\Support\Facades\Route;
 
 
+Route::post('AddReservation', [ReservaionController::class,'AddReservation']);
 
-    Route::post('AddReservation', [ReservaionController::class,'AddReservation']);
+    Route::post('time', [ReservaionController::class,'time']);
     Route::post('select', [ReservaionController::class,'select']);
 
 

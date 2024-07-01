@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\StatusTable;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,10 +12,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tableSizes', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('size');
-            $table->timestamps();
+            Schema::create('tablesizes', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('size');
+                $table->integer('type');
+                $table->integer('count');
+                $table->timestamps();
+    
+
+
+        
         });
     }
 
@@ -23,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tableSizes');
+        Schema::dropIfExists('tables');
     }
 };
