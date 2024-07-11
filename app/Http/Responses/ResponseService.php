@@ -14,7 +14,7 @@ class ResponseService
      * @param int $status      - The HTTP status code for the response.
      * @return JsonResponse
      */
-    public static function success( $message,  $data=" " ,  $code = 200): JsonResponse
+    public static function success($message,  $data=" " ,  $code = 200): JsonResponse
     {
         return response()->json([
             'massage' => $message,

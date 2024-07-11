@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Offers\Offer;
+use App\Models\Offers\Offer_detalis;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Order\OrderDetalis;
@@ -32,6 +34,15 @@ class ProductType extends Model
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+    public function offerDetails()
+    {
+        return $this->hasMany(Offer_detalis::class);
+    }
+
+    public function offers()
+    {
+        return $this->belongsToMany(Offer::class, 'offer_detalis');
     }
 
 }
