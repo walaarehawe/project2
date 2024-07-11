@@ -14,18 +14,24 @@ use App\Http\Controllers\Order\OrderLocalController;
 use App\Http\Controllers\PreparatioSection\HeadPreparationController;
 use App\Http\Controllers\Table\TableController;
 use App\Http\Controllers\Reservation\ReservaionController;
+use App\Http\Controllers\WaiterSystem\WaiterController;
 use App\Models\Order\OrderExternalUser;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\ManageMenu\RatingController;
 
 use Illuminate\Support\Facades\Route;
+Route::post('ss', [WaiterController::class,'ss']);
 
+Route::post('ShowallReservation', [ReservaionController::class,'ShowallReservation']);
+Route::post('ShowuserReservation', [ReservaionController::class,'ShowuserReservation']);
+Route::post('DeleteReservation', [ReservaionController::class,'DeleteReservation']);
 
 Route::post('AddReservation', [ReservaionController::class,'AddReservation']);
+Route::post('AddTableReservation', [ReservaionController::class,'AddTableReservation']);
 
     Route::post('time', [ReservaionController::class,'time']);
-    Route::post('select', [ReservaionController::class,'select']);
+    Route::post('ShowTable', [ReservaionController::class,'ShowTable']);
 
 
 //Manage Section

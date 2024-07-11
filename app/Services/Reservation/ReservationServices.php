@@ -32,6 +32,17 @@ public  $size_id;
 public $collection2;
 public $collection4;
 public $collection6;
+
+// public function DeleteReservation($request){
+//    $data = Reservation::find($request->id);
+//    $data->delete();
+//   }
+public function ShowuserReservation($user_id){
+  return   $data = Reservation::with('Type')->where('user_id',$user_id)->orderBy('Date', 'asc')->orderBy('time_id', 'asc')->get();
+  }
+public function ShowallReservation(){
+return   $data = Reservation::with('Type')->orderBy('Date', 'asc')->orderBy('time_id', 'asc')->get();
+}
  public  function time( $request ){
   $alltimes = Time::where('avilable',0)->get();
   // return $times;
@@ -73,13 +84,7 @@ public $collection6;
     
     
     $times= $this->timeforperson( $times ,$time );
-     
-    
-    
-    
-    
-    
-    
+       
     }}  } } 
     return $times;
  }
@@ -173,10 +178,21 @@ public $collection6;
       return true;
   
     } 
+    public function Reservationtable( $request , $tables )
+    {
+            $request['user_id'] =1;
 
+$data = $this->AddReservation($request);
+foreach($tables as $table){
+  $size = Table::find($table)->size_id;
+  $data1 = $this->AddTableReservation($data , $size , $table);
+}
+return $data1;
+
+    }
     public function AddReservation( $request )
     {
-$data = Reservation::firstOrCreate($request);
+      $data = Reservation::firstOrCreate($request);
       return $data['id'];       
  
     }
@@ -263,6 +279,30 @@ public function six($request  ,$collection6,$num){
     return [$table ,$TableSize->id] ;
     return [];
     }
+
+    public function ShowTable($request)
+    
+    {
+      $this->date = $request['Date'];
+      $this->time_id=$request['time_id'];
+      $Reservation=Reservation::with('Type')->where('Date',$this->date)->where('time_id',$this->time_id)->get(); 
+    $tables = Table::with('size')->get();    
+      foreach($Reservation as $reservation){
+        $type =$reservation->type->all();
+        foreach($type as $types){
+          $table_id= $types->table_id;
+          foreach($tables as $tt){
+            if ($table_id==$tt->id){
+              $tables = $tables->reject(function ($value ) use ($tt) {
+                return $value === $tt;
+            });
+              }
+            }   
+          }
+      }
+      return $tables;
+      }
+
     public function person($request , $user_id)
     
     {

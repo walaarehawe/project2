@@ -58,4 +58,10 @@ public function childAddresses()
 {
     return $this->hasMany(UserAddress::class, 'user_id')->with('address.childAddresses');
 }
+
+
+  public function Employee()
+    {
+        return $this->hasOne(Employee::class);
+    }
 }
