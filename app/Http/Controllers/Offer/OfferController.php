@@ -36,16 +36,16 @@ class OfferController extends Controller
 
         try {
             return  $id = $this->offer->store($request);
-            ResponseService::success(" تم الطلب بنجاح ");
+            // ResponseService::success(" تم الطلب بنجاح ");
         } catch (Throwable $exception) {
 
             return ResponseService::error($exception->getMessage(), 'An error occurred');
         }
 
 
-        $data = $request->all();
-        $offer = Offer::create($data);
-        return $offer;
+        // $data = $request->all();
+        // $offer = Offer::create($data);
+        // return $offer;
     }
 
 

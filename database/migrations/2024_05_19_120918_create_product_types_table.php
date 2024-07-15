@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->double('price');
             $table->double('Calories');
+            $table->decimal('total_ratings')->default(0.0);
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->timestamps();

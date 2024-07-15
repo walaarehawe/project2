@@ -31,8 +31,8 @@ return $path.$filename;
     }
     public function delete($id)
     {
-        // return $this->model->find($id)->delete();
-        $this->model->find($id)->each->delete();
+        // return $this->model->find($id);
+        $this->model->find($id)->delete();
         return ['message' => ' delete succ', 'data' => '  '];
     }
     public function update($id, $data)

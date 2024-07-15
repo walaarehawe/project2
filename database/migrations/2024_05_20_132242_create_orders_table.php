@@ -17,7 +17,7 @@ return new class extends Migration
             $table->increments('id');
             $table->integer('type_id')->unsigned();
             $table->integer('price')->default('0');
-            $table->string('status_order')->default(OrderStatus::UNREADY)->comment('1 is   Ready and 0 unReady');
+            $table->integer('status_order')->default(OrderStatus::UNREADY)->comment('1 is   Ready and 0 unReady');
             $table->string('status_invoice')->default(InvoiceStatus::UNPAID)->comment('1 is Paid and 0 unPaid');
             $table->foreign('type_id')->references('id')->on('type_orders');
             $table->timestamps();

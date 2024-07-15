@@ -22,8 +22,12 @@ class TableReservationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'reservation_id'=>'required',
-            'size_id'=>'required'
+              // 'reservation_id'=>'required',
+            // 'size_id'=>'required'
+            'Date'=>'required',
+            // 'table_status'=>'required',
+            'persons'=>'required',
+            'time_id'=>'required'
         ];
     }
 }

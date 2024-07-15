@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\Reservation\Reservation;
 use Laravel\Sanctum\PersonalAccessToken;
 use Throwable;
+use App\Models\Time;
 use App\Models\TableSize;
 use App\Models\Table\Table;
 use App\Enums\SizeTable;
@@ -31,6 +32,13 @@ class ReservaionController extends Controller
     public function ShowTable(Request $request)
     {
         $data = $this->reservationServices->ShowTable($request->all());
+
+        return $data;
+    }
+
+    public function ShowTime(Request $request)
+    {
+        $data = Time::where('avilable',0)->get();
 
         return $data;
     }
@@ -54,13 +62,21 @@ class ReservaionController extends Controller
             return ResponseService::error($exception->getMessage(), 'An error occurred');
         }
     }
-    public function AddTableReservation(ReservationRequest $request)
+    public function AddTableReservation(TableReservationRequest $request)
     {
 
         try {
+
+// $res = Reservation::where('Date',$request->Date &&'time_id',$request->time_id &&'person',$request->person)->first();
+// if(!$res){
+//     return $res;
+// }
+
             $table_id =$request->table_id;
+                        // $request['tabe_status'] =Table::find($tables[0])->type_id;
+// retuen $table_id;
             $data = $this->reservationServices->Reservationtable($request->validated() ,$table_id );
-           return ResponseService::success($data);
+           return ResponseService::success("add succ",$data);
         } catch (Throwable $exception) {
             return ResponseService::error($exception->getMessage(), 'An error occurred');
         }

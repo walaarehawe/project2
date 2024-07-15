@@ -38,10 +38,10 @@ public $collection6;
 //    $data->delete();
 //   }
 public function ShowuserReservation($user_id){
-  return   $data = Reservation::with('Type')->where('user_id',$user_id)->orderBy('Date', 'asc')->orderBy('time_id', 'asc')->get();
+  return   $data = Reservation::with('time')->with('Type')->where('user_id',$user_id)->orderBy('Date', 'asc')->orderBy('time_id', 'asc')->get();
   }
 public function ShowallReservation(){
-return   $data = Reservation::with('Type')->orderBy('Date', 'asc')->orderBy('time_id', 'asc')->get();
+return   $data = Reservation::with('time')->with('user')->with('Type')->orderBy('Date', 'asc')->orderBy('time_id', 'asc')->get();
 }
  public  function time( $request ){
   $alltimes = Time::where('avilable',0)->get();
@@ -181,7 +181,7 @@ return   $data = Reservation::with('Type')->orderBy('Date', 'asc')->orderBy('tim
     public function Reservationtable( $request , $tables )
     {
             $request['user_id'] =1;
-
+            $request['table_status'] =Table::find($tables[0])->type_id;
 $data = $this->AddReservation($request);
 foreach($tables as $table){
   $size = Table::find($table)->size_id;
@@ -192,7 +192,7 @@ return $data1;
     }
     public function AddReservation( $request )
     {
-      $data = Reservation::firstOrCreate($request);
+      $data = Reservation::Create($request);
       return $data['id'];       
  
     }

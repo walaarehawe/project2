@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('product_path');
             $table->text('product_information');
-            $table->double('total_ratings')->default(0.0);
             $table->timestamps();
         });
     }

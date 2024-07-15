@@ -2,6 +2,7 @@
 
 namespace App\Services\ManageMenu;
 
+use App\Models\ProductType;
 use Illuminate\Http\JsonResponse;
 use App\Models\Rating;
 use App\Models\Product;
@@ -19,6 +20,7 @@ class RatingServices extends CRUDServices
     {
         $token = PersonalAccessToken::findToken($request->bearerToken());
         $user = $token->tokenable->id;
+ 
         $rate = Rating::where('product_id', $request['product_id'])->where('user_id', $user)->first();
         if ($rate) {
             $rate->rating = $request['rating'];
@@ -37,8 +39,8 @@ class RatingServices extends CRUDServices
     public function UpdateRating($request)
     {
         $avg = Rating::where('product_id', $request['product_id'])->avg('rating');
-        $data = Product::where('id', $request['product_id'])->first();
-        $data->total_ratings = (double) $avg;
+        $data = ProductType::where('id', $request['product_id'])->first();
+        $data->total_ratings = $avg;
         $data->save();
         return $data;
     }

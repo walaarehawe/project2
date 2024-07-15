@@ -23,9 +23,9 @@ use App\Http\Controllers\Offer\OfferController;
 use App\Http\Controllers\Offer\OfferDetailsController;
 use App\Http\Controllers\Order\OrderDetalisController;
 use Illuminate\Support\Facades\Route;
-Route::post('ss', [WaiterController::class,'ss']);
+Route::post('changestatus', [WaiterController::class,'changestatus']);
 
-Route::post('ShowallReservation', [ReservaionController::class,'ShowallReservation']);
+Route::get('ShowallReservation', [ReservaionController::class,'ShowallReservation']);
 Route::post('ShowuserReservation', [ReservaionController::class,'ShowuserReservation']);
 Route::post('DeleteReservation', [ReservaionController::class,'DeleteReservation']);
 
@@ -70,6 +70,10 @@ Route::post('ShowType', [ProductController::class, 'ShowType']);
 Route::post('DeleteProduct', [ProductController::class, 'DeleteProduct']);
 Route::post('showDetails', [ProductController::class, 'showDetails']);
 Route::post('AddRating', [RatingController::class, 'AddRating']);
+Route::post('AddComment', [RatingController::class, 'AddComment']);
+Route::post('showComment', [RatingController::class, 'showComment']);
+Route::post('EditComment', [RatingController::class, 'EditComment']);
+Route::post('deleteComment', [RatingController::class, 'deleteComment']);
 
 
 //Auth:
