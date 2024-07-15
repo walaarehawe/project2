@@ -54,6 +54,12 @@ class OfferDetailsController extends Controller
                     'photo' => $product->product_path,
                 ];
             }
+            $response['name_offer']=$offer->name;
+            $response['status_offer']=$offer->status_offer;
+            $response['start_datetime']=$offer->start_datetime;
+            $response['end_datetime']=$offer->end_datetime;
+            $response['total_price']=$offer->total_price;
+
             return ResponseService::success($response);
         } catch (Throwable $exception) {
             return ResponseService::error($exception->getMessage(), 'An error occurred');
