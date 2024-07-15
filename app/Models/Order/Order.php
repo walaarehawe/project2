@@ -43,6 +43,6 @@ class Order extends Model
     // }
     public function offers()
     {
-        return $this->belongsToMany(Offer::class,'order_offers','order_id','offer_id');
+        return $this->belongsToMany(Offer::class,'order_offers','order_id','offer_id')->withPivot('amount');
     }
 }

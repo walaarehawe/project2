@@ -35,7 +35,6 @@ class OrderDetalisController extends Controller
     public function getUnpaidOrdersByUserId(Request $request)
     {
        
-       
         try {
             $userId = Auth::id();
          $orders= Order::where('status_invoice', '0')
@@ -58,12 +57,38 @@ class OrderDetalisController extends Controller
     {
         try {
             $order = Order::with([
-                'orderDetalis.productType',
+                'orderDetalis.productType.product',
                 'offers',
             ])->find($request->order_id);
+            
             if (!$order) {
-                return 'oder not found';
+                return 'Order not found';
             }
+            
+            $response = [
+                'offer'=>$order->offers
+            ];
+            foreach ($order->orderDetalis as $detail) {
+                $productType = $detail->productType;
+                $product = $productType->product;
+               
+                $response[] = [
+                    'order_number' => $order->id,
+                    'detalis_id' => $detail->id,
+                    'product_type_name' => $productType->name,
+                    'Calories' => $productType->Calories,
+                    'amount' => $detail->amount,
+                    'price_pre_one' => $detail->price_pre_one,
+                    'total_price' => $detail->total_price,
+                    'product_information' => $product->product_information,
+                    'product_image' => $product->product_path,  
+                    
+                ];
+            }
+            $response['total_price']=$order->price;
+          
+            
+            return $response;
 
             return ResponseService::success($order);
         } catch (Throwable $exception) {

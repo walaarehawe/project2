@@ -41,11 +41,6 @@ class OfferController extends Controller
 
             return ResponseService::error($exception->getMessage(), 'An error occurred');
         }
-
-
-        $data = $request->all();
-        $offer = Offer::create($data);
-        return $offer;
     }
 
 

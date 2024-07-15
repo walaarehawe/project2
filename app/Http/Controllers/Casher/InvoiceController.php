@@ -31,7 +31,6 @@ class InvoiceController extends Controller
 
     public function showInvoiceTable(Request $request)
     {
-
         try {
             $invoice = $this->invoice->showInvoiceTable($request);
             return ResponseService::success('da', $invoice);
@@ -42,7 +41,7 @@ class InvoiceController extends Controller
     public function showInvoiceOrderNumber(Request $request)
     {
         try {
-            $data =  $this->invoice->showInvoiceOrderNumber($request);
+            return $data =  $this->invoice->showInvoiceOrderNumber($request);
             return ResponseService::success('da', $data);
         } catch (Throwable $exception) {
             return ResponseService::error($exception->getMessage(), 'An error occurred');
@@ -55,6 +54,33 @@ class InvoiceController extends Controller
         try {
             $success = $this->invoice->updatePayment($request);
             return ResponseService::success(' تم الدفع بنجاح');
+        } catch (Throwable $exception) {
+            return ResponseService::error($exception->getMessage(), 'An error occurred');
+        }
+    }
+    public function invoiceInternal(Request $request)
+    {
+        try {
+            $invoice = Order::where('status_invoice', 1)->where('type_id', 1)->get();
+            return ResponseService::success($invoice);
+        } catch (Throwable $exception) {
+            return ResponseService::error($exception->getMessage(), 'An error occurred');
+        }
+    }
+    public function invoiceExternal(Request $request)
+    {
+        try {
+            $invoice = Order::where('status_invoice', 1)->where('type_id', 2)->get();
+            return ResponseService::success($invoice);
+        } catch (Throwable $exception) {
+            return ResponseService::error($exception->getMessage(), 'An error occurred');
+        }
+    }
+    public function invoiceLocal(Request $request)
+    {
+        try {
+            $invoice = Order::where('status_invoice', 1)->where('type_id', 3)->get();
+            return ResponseService::success($invoice);
         } catch (Throwable $exception) {
             return ResponseService::error($exception->getMessage(), 'An error occurred');
         }
