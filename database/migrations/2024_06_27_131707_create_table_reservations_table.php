@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->integer('table_id')->unsigned();
             $table->foreign('table_id')->references('id')->on('tables');
             $table->integer('reservation_id')->unsigned();
-            $table->foreign('reservation_id')->references('id')->on('reservations');
+            $table->foreign('reservation_id')->references('id')->on('reservations')->onDelete('cascade');;
             $table->timestamps();
         });
     }

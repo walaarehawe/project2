@@ -23,14 +23,21 @@ use App\Http\Controllers\Offer\OfferController;
 use App\Http\Controllers\Offer\OfferDetailsController;
 use App\Http\Controllers\Order\OrderDetalisController;
 use Illuminate\Support\Facades\Route;
-Route::post('changestatus', [WaiterController::class,'changestatus']);
 
-Route::get('ShowallReservation', [ReservaionController::class,'ShowallReservation']);
+
+Route::group(['prefix' => 'Auth', 'middleware' => 'auth:sanctum'], function () {
+    Route::post('show', [WaiterController::class,'show']);
+
+
+});
+
+Route::post('EdituserReservation', [ReservaionController::class,'EdituserReservation']);
 Route::post('ShowuserReservation', [ReservaionController::class,'ShowuserReservation']);
 Route::post('DeleteReservation', [ReservaionController::class,'DeleteReservation']);
 
 Route::post('AddReservation', [ReservaionController::class,'AddReservation']);
 Route::post('AddTableReservation', [ReservaionController::class,'AddTableReservation']);
+Route::post('EditReservation', [ReservaionController::class,'EditReservation']);
 
     Route::post('time', [ReservaionController::class,'time']);
     Route::post('ShowTable', [ReservaionController::class,'ShowTable']);

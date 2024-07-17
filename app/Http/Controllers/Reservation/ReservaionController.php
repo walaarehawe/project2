@@ -56,7 +56,6 @@ class ReservaionController extends Controller
             $token = PersonalAccessToken::findToken($request->bearerToken());
             $user_id = $token->tokenable->id;
             $data = $this->reservationServices->person($request->validated(), $user_id);
-
             return ResponseService::success($data);
         } catch (Throwable $exception) {
             return ResponseService::error($exception->getMessage(), 'An error occurred');
@@ -67,14 +66,23 @@ class ReservaionController extends Controller
 
         try {
 
-// $res = Reservation::where('Date',$request->Date &&'time_id',$request->time_id &&'person',$request->person)->first();
-// if(!$res){
-//     return $res;
-// }
+$reservations = Reservation::where([['Date',$request->Date],['time_id',$request->time_id],[ 'persons',$request->persons]])->get();
+if($reservations){
+    // return $reservations;
+    foreach($reservations as $reservation){
+$tables = TableReservations::where('reservation_id' ,$reservation->id )->get();
+foreach($tables as $table){
+$array[]=$table->table_id;
+    }
+    $differenceArray = array_diff($request->table_id, $array);
+    // return  $differenceArray;
+if(!$differenceArray){
+    return ResponseService::validation("you have reservation with this data in $reservation->created_at ",$reservation);
+}
+    // return $res;
+}}
 
             $table_id =$request->table_id;
-                        // $request['tabe_status'] =Table::find($tables[0])->type_id;
-// retuen $table_id;
             $data = $this->reservationServices->Reservationtable($request->validated() ,$table_id );
            return ResponseService::success("add succ",$data);
         } catch (Throwable $exception) {
@@ -86,7 +94,6 @@ class ReservaionController extends Controller
     {
 
         try {
-            // $table_id =$request->table_id;
             $data = $this->reservationServices->ShowallReservation();
            return ResponseService::success($data);
         } catch (Throwable $exception) {
@@ -110,17 +117,65 @@ class ReservaionController extends Controller
 
         try {         
                $data = $this->reservationServices->delete($request->id);
-           return ResponseService::success($data);
+           return ResponseService::success($data['message'],$data['data']);
         } catch (Throwable $exception) {
             return ResponseService::error($exception->getMessage(), 'An error occurred');
         }
     }
+
+    public function EditReservation(Request $request)
+    {
+    try{
+        $reservation['Date']= $request->Date;
+        $reservation['persons']= $request->persons;
+        $reservation['time_id']= $request->time_id;
+         $tables = TableReservations::where('reservation_id' ,$request->id )->get();
+        $data =$this->reservationServices->update($request->id, $reservation);
+            foreach($tables as $table){
+                $array[]=$table->table_id;
+                    }
+                     $differenceArray = array_diff($request->table_id, $array);
+                    if($differenceArray){
+                        foreach($differenceArray as $difference){  
+                            $size = Table::find($difference)->size_id;
+                            $data1 = $this->reservationServices->AddTableReservation($request->id , $size , $difference);
+                        }}
+                        $differenceArray = array_diff( $array ,$request->table_id);
+                        if($differenceArray){
+                            foreach($differenceArray as $difference){  
+                                $tables = TableReservations::where([['reservation_id' ,$request->id ],['table_id',$difference ]])->first();
+                                $tables->delete();
+                            }}
+        return ResponseService::success("edit succ","");
+       }
+        catch (Throwable $exception) {
+        return ResponseService::error( $exception->getMessage() , 'An error occurred');
+       }
+}
+public function EdituserReservation(ReservationRequest $request)
+{
+try{
+    // $reservation['Date']= $request->Date;
+    // $reservation['persons']= $request->persons;
+    // $reservation['time_id']= $request->time_id;
+    //  $tables = TableReservations::where('reservation_id' ,$request->id )->get();
+    // $data =$this->reservationServices->update($reque/st->id, $reservation);
+        // foreach($tables as $table){
+            // $table->delete();
+                        // }
+    $reservation = Reservation::find($request->id)->first();
+    $reservation->delete();
+return $aa= $this->AddReservation($request);
+    // return ResponseService::success("edit succ","");
+   }
+    catch (Throwable $exception) {
+    return ResponseService::error( $exception->getMessage() , 'An error occurred');
+   }
 }
 
 
 
-
-
+}
 
 
 

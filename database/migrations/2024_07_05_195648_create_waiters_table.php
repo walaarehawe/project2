@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('waiters', function (Blueprint $table) {
             $table->id();
             $table->foreignId('waiter_id')->constrained('users');
-            $table->foreignId('order_id')->constrained('order_tables')->onDelete('cascade');
+            $table->integer('order_id')->unsigned();
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');            $table->boolean('jobs');
             $table->timestamps();
         });
     }

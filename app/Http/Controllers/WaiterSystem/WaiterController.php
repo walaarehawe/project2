@@ -10,6 +10,7 @@ use App\Models\Waiter;
 use App\Models\User;
 use App\Services\Waiter\WaiterServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use Throwable;
 class WaiterController extends Controller
@@ -29,7 +30,20 @@ class WaiterController extends Controller
             return ResponseService::error($exception->getMessage(), 'An error occurred');
         }
 }
+public function show(Request $request){
 
+    try {
+
+ $user =Auth::id();
+
+    //     $data = $this->waiterServices->ss($request);
+    //    return ResponseService::success("show succ",$data);
+// echo 9;
+return $order = Waiter::with('order.table')->where('waiter_id',$user)->get();
+    } catch (Throwable $exception) {
+        return ResponseService::error($exception->getMessage(), 'An error occurred');
+    }
+}
 
 
 
