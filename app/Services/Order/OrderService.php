@@ -12,7 +12,7 @@ use App\Services\CRUDServices;
 
 class OrderService extends CRUDServices
 {
-    public static function calculateTotalPrice($id_order)
+    public static function calculateTotalPrice($id_order, $priceCost = 0)
     {
         $orderdetalis = OrderDetalis::where('order_id', $id_order)->get();
         $i = 0;
@@ -25,7 +25,7 @@ class OrderService extends CRUDServices
         }
         $priceOffer = OrderOfferServices::calculateTotalPrice($id_order);
         $orderprice = Order::find($id_order);
-        $totalSum = $sum + $priceOffer;
+        $totalSum = $sum + $priceOffer + $priceCost;
         $orderprice->update(['price' => $totalSum]);
     }
 

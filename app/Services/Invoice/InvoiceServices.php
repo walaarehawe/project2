@@ -9,6 +9,7 @@ use App\Http\Controllers\Address\AddressController;
 use App\Http\Responses\ResponseService;
 use App\Models\Offers\Offer;
 use App\Models\Order\Order;
+use App\Models\Order\OrderExternalUser;
 use Throwable;
 use App\Models\Order\OrderOffer;
 use App\Models\Table\Table;
@@ -29,9 +30,7 @@ class InvoiceServices
                 return " الطاولة ليست لها طلبية";
             }
             $orderID = $table->order->order_id;
-            $order = Order::find($orderID);
-            $orderDetails = $order->orderDetalis()->with('productType')->get();
-            $orderDetails['total_price_order'] = $order->price;
+            $orderDetails = Order::with('orderDetalis.productType', 'notes')->find($orderID);
             return  $orderDetails;
         } catch (Throwable $exception) {
             return ResponseService::error($exception->getMessage(), 'An error occurred');
@@ -43,7 +42,7 @@ class InvoiceServices
         try {
 
             $order_id = $request->order_id;
-            $order = Order::with('orderDetalis.productType', 'offers')->find($order_id);
+            $order = Order::with('orderDetalis.productType', 'offers', 'notes')->find($order_id);
 
             if (!$order) {
                 return 'order not found';
@@ -69,9 +68,14 @@ class InvoiceServices
             $order = Order::with([
                 'orderDetalis.productType',
                 'offers',
-                'orderExternal.userAddress.user'
+                'orderExternal.userAddress.user',
+                'orderExternal.transportcost.transport',
+                'notes'
             ])->find($id);
 
+            $orderExternalUser = $order->orderExternal->transportcost;
+            //$transport=$orderExternalUser->transport;
+            $transportationCost = $orderExternalUser->transport;
             $addressName = $order->orderExternal->userAddress;
             $addressId = $addressName->address_id;
             $addressName['address'] = AddressController::showuseraddress($addressId);
@@ -79,7 +83,8 @@ class InvoiceServices
             unset($orderArray['order_external']);
             $data = [
                 'name_address' => $addressName,
-                'order' => $orderArray
+                'order' => $orderArray,
+                'transport' =>  ['transportcost' => $orderExternalUser],
             ];
             return $data;
         } catch (Throwable $exception) {

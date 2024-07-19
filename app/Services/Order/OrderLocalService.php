@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\ResponseTrait;
 use App\HTTP\Responses\ResponseService;
 use App\Models\Notes;
+use App\Models\Order\Notes as OrderNotes;
 use App\Models\Order\Order;
 use App\Models\Order\OrderDetalis;
 use Illuminate\support\facades\DB;
@@ -69,7 +70,7 @@ class OrderLocalService extends CRUDServices
                 OrderOfferServices::storeOrderOffer($request, $order_id);
             }
             if ($request->notes) {
-                Notes::create([
+                OrderNotes::create([
                     'notes' => $request->notes,
                     'order_id' => $order_id,
                 ]);

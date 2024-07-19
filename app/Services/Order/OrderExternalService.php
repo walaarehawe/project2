@@ -9,6 +9,7 @@ use App\HTTP\Responses\ResponseService;
 use App\Models\Address\Address;
 use App\Models\Address\UserAddress;
 use App\Models\Notes;
+use App\Models\Order\Notes as OrderNotes;
 use App\Models\Order\Order;
 use App\Models\Order\OrderDetalis;
 use App\Models\Order\OrderExternalUser;
@@ -16,12 +17,13 @@ use Illuminate\support\facades\DB;
 use App\Models\Order\OrderTable;
 use App\Models\ProductType;
 use App\Models\Table\Table;
+use App\Models\TransportationCost;
 use App\Services\CRUDServices;
 use Illuminate\Support\Facades\Auth;
 
 class OrderExternalService extends CRUDServices
 {
-
+    public $cost;
 
     public function __construct()
     {
@@ -31,7 +33,6 @@ class OrderExternalService extends CRUDServices
 
     public function o($request)
     {
-
         $data2['type_id'] = OrderType::EXTERNAL;
         $order = Order::create($data2);
         $id = $order->id;
@@ -41,11 +42,13 @@ class OrderExternalService extends CRUDServices
         $userAddress = UserAddress::where('address_id', $addressId)
             ->where('user_id', $user_id)
             ->first();
-
+        $transporationcost = $this->transporationCost($request);
+        $this->cost = $transporationcost->cost;
         $order2 = OrderExternalUser::create(
             [
                 'order_id' => $id,
                 'user_address_id' => $userAddress->id,
+                'trnsporation_costs_id' => $transporationcost->id,
             ]
         );
 
@@ -68,21 +71,29 @@ class OrderExternalService extends CRUDServices
                 }
             }
 
+
             if ($request->input('offers')) {
                 OrderOfferServices::storeOrderOffer($request,  $id);
             }
             if ($request->notes) {
-                Notes::create([
+                OrderNotes::create([
                     'notes' => $request->notes,
                     'order_id' => $id,
                 ]);
             }
-            OrderService::calculateTotalPrice($id);
+            OrderService::calculateTotalPrice($id, $this->cost);
             DB::commit();
             return ResponseService::success('Order placed successfully');
         } catch (Throwable $exception) {
             DB::rollBack();
             return ResponseService::error($exception->getMessage(), 'An error occurred');
         }
+    }
+    public function transporationCost($request)
+    {
+        return $transportationCosts = TransportationCost::where([
+            'transport_id' => $request->transport_id,
+            'city_id' => $request->city_id,
+        ])->first();
     }
 }

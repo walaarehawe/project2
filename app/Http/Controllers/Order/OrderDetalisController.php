@@ -37,12 +37,11 @@ class OrderDetalisController extends Controller
 
         try {
             $userId = Auth::id();
-            $orders = Order::where('status_invoice', '0')
-                ->whereHas('orderExternal', function ($query) use ($userId) {
-                    $query->whereHas('userAddress', function ($subQuery) use ($userId) {
-                        $subQuery->where('user_id', $userId);
-                    });
-                })
+            $orders = Order::whereHas('orderExternal', function ($query) use ($userId) {
+                $query->whereHas('userAddress', function ($subQuery) use ($userId) {
+                    $subQuery->where('user_id', $userId);
+                });
+            })->orderBy('created_at', 'desc')
                 ->select('id', 'type_id', 'price', 'status_invoice') // تحديد الحقول التي ترغب في عرضها
                 ->get();
 
@@ -59,8 +58,18 @@ class OrderDetalisController extends Controller
             $order = Order::with([
                 'orderDetalis.productType.product',
                 'offers',
+                'orderExternal.transportcost.transport',
             ])->find($request->order_id);
-            return ResponseService::success($order);
+
+            $transportCost = $order->orderExternal->transportcost;
+            unset($order->orderExternal);
+            // $transport = $transportCost->transport;
+
+            // قم بإرجاع البيانات المطلوبة
+            return ResponseService::success([
+                'order' => $order,
+                'transportcost' => $transportCost,
+            ]);
         } catch (Throwable $exception) {
             return ResponseService::error($exception->getMessage(), 'An error occurred');
         }

@@ -7,6 +7,7 @@ use App\Enums\StatusTable;
 use Throwable;
 use App\HTTP\Responses\ResponseService;
 use App\Models\Notes;
+use App\Models\Order\Notes as OrderNotes;
 use App\Models\Order\Order;
 use App\Models\Order\OrderDetalis;
 use Illuminate\support\facades\DB;
@@ -68,7 +69,7 @@ class OrderInternalService extends CRUDServices
                 OrderOfferServices::storeOrderOffer($request,  $id);
             }
             if ($request->notes) {
-                Notes::create([
+                OrderNotes::create([
                     'notes' => $request->notes,
                     'order_id' => $id,
                 ]);
