@@ -31,7 +31,8 @@ class OrderInternalController extends Controller
   {
 
     try {
-      $id = $this->order->order2($request);
+     
+     return $id = $this->order->order2($request);
       if ($id == 'errotable') {
         return ResponseService::error("error is happen table not found", "");
       }

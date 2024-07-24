@@ -10,6 +10,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\ResponseTrait;
 use App\HTTP\Responses\ResponseService;
+use App\Models\Notes;
+use App\Models\Order\Notes as OrderNotes;
 use App\Models\Order\Order;
 use App\Models\Order\OrderDetalis;
 use Illuminate\support\facades\DB;
@@ -33,17 +35,7 @@ class OrderLocalService extends CRUDServices
         parent::__construct(new Order());
     }
 
-    public function rule($request, $order_id)
-    {
-        return $datau = [
-            'order_id' => $order_id,
-            'product_id' => $request->product_id,
-            'amount' => $request->amount,
-            'price_pre_one' => $request->price_pre_one,
-            'total_price' => $request->total_price
-        ];
-        return    OrderDetalis::create($datau);
-    }
+
 
     public function addDetalisToOrder($request, $id)
     {
@@ -62,20 +54,7 @@ class OrderLocalService extends CRUDServices
             $detalis = OrderDetalis::create($d);
         }
     }
-    public function calculateTotalPrice($id_order)
-    {
-        $orderdetalis = OrderDetalis::where('order_id', $id_order)->get();
-        $i = 0;
-        $sum = 0;
 
-        foreach ($orderdetalis as $order) {
-            $d[] = $orderdetalis[$i]->total_price;
-            $sum += $d[$i];
-            $i++;
-        }
-        $orderprice = Order::find($id_order);
-        $orderprice->update(['price' => $sum]);
-    }
 
 
 
@@ -84,21 +63,27 @@ class OrderLocalService extends CRUDServices
         DB::beginTransaction();
 
         try {
-        $data2['type_id'] = OrderType::LOCAL;
-        $order = Order::create($data2);
-        $order_id = $order->id;
-        if($request->input('offers')){
-        OrderOfferServices::storeOrderOffer($request, $order_id);
-        }
-       $this->addDetalisToOrder($request,$order_id); 
-       $this->calculateTotalPrice($order_id);
-       Db::commit();
-       return ResponseService::success('Order placed successfully');
+            $data2['type_id'] = OrderType::LOCAL;
+            $order = Order::create($data2);
+            $order_id = $order->id;
+            if ($request->input('offers')) {
+                OrderOfferServices::storeOrderOffer($request, $order_id);
+            }
+            if ($request->notes) {
+                OrderNotes::create([
+                    'notes' => $request->notes,
+                    'order_id' => $order_id,
+                ]);
+            }
+            if ($request->input('products')) {
+                $this->addDetalisToOrder($request, $order_id);
+            }
+            OrderService::calculateTotalPrice($order_id);
+            Db::commit();
+            return ResponseService::success('Order placed successfully');
         } catch (Throwable $exception) {
             DB::rollBack();
             return ResponseService::error($exception->getMessage(), 'An error occurred');
         }
-    
     }
-
 }

@@ -10,6 +10,7 @@ class Offer_detalis extends Model
 {
     use HasFactory;
     protected $guarded =[];
+    protected $hidden = ['pivot','created_at','updated_at'];
     public function offer(){
         return $this->belongsTo(Offer::class);
     }

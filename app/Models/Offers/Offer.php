@@ -10,7 +10,7 @@ class Offer extends Model
 {
     use HasFactory;
     protected $guarded =[];
-    protected $hidden = ['pivot','created_at','updated_at','end_datetime','start_datetime','status_offer'];
+    protected $hidden = ['created_at','updated_at'];
 
     public function offerDetails()
     {
@@ -23,6 +23,10 @@ class Offer extends Model
         return $this->belongsToMany(Offer_detalis::class);
     }
     public function details()
+    {
+        return $this->hasMany(Offer_detalis::class, 'offer_id');
+    }
+    public function details4()
     {
         return $this->hasMany(Offer_detalis::class, 'offer_id');
     }
