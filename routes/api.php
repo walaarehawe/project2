@@ -7,6 +7,7 @@ use App\Http\Controllers\ManageMenu\SectionController;
 use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\Address\AddressController;
 use App\Http\Controllers\Casher\InvoiceController;
+use App\Http\Controllers\FireBase\DeviceTokenController;
 use App\Http\Controllers\Order\OrderExternalController;
 use App\Http\Controllers\Order\OrderInternalController;
 use App\Http\Controllers\Order\OrderLocalController;
@@ -129,5 +130,7 @@ Route::group(['prefix' => 'search'], function () {
     Route::post('order', [OrderSearchController::class, 'search']);
     Route::post('calculateTotalPrice', [OrderSearchController::class, 'calculateTotalPrice']);
 });
+Route::group(['prefix' => 'DeviceToken', 'middleware' => 'auth:sanctum'], function () {
+    Route::post('deviceToken', [DeviceTokenController::class, 'store']);
+});
 
-Route::post('tra', [HeadPreparationController::class, 'tra']);

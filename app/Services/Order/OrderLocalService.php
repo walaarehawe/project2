@@ -24,6 +24,8 @@ use Illuminate\Http\JsonResponse;
 
 use App\Models\Section;
 use App\Models\Table\Table;
+use App\Models\User;
+use App\Notifications\NewOrderCreteNotification;
 use App\Services\CRUDServices;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
@@ -65,6 +67,8 @@ class OrderLocalService extends CRUDServices
         try {
             $data2['type_id'] = OrderType::LOCAL;
             $order = Order::create($data2);
+            User::find(1)->notify(new NewOrderCreteNotification($order));
+
             $order_id = $order->id;
             if ($request->input('offers')) {
                 OrderOfferServices::storeOrderOffer($request, $order_id);

@@ -61,4 +61,12 @@ public function childAddresses()
 {
     return $this->hasMany(UserAddress::class, 'user_id')->with('address.childAddresses');
 }
+
+
+public function deviceTokens(){
+    return $this->hasMany(DeviceToken::class);
+}
+public function routeNotificationForFcm(){
+    return $this->deviceTokens()->pluck('device_token')->toArray();
+}
 }

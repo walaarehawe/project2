@@ -8,6 +8,8 @@ use Throwable;
 use App\HTTP\Responses\ResponseService;
 use App\Models\Order\OrderOffer;
 use App\Models\ProductType;
+use App\Models\User;
+use App\Notifications\NewOfferCreateNotification;
 use Illuminate\support\facades\DB;
 use App\Services\CRUDServices;
 use GuzzleHttp\Psr7\Request;
@@ -38,6 +40,11 @@ class OfferServices  extends CRUDServices
                 'end_datetime' => $request->end_datetime,
             ]);
             $offerId = $offer->id;
+            $users = User::all();
+            foreach ($users as $user) {
+                $user->notify(new NewOfferCreateNotification($offer));
+            }
+
             $this->storeOfferdetalis($request, $offerId);
             DB::commit();
             return ResponseService::success('offer added successfully');
