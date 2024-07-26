@@ -21,7 +21,8 @@ class NewOfferCreateNotification extends Notification implements ShouldQueue
         $this->offers = $offers;
         $this->offer = [
             'offerType' => 'offer',
-            'name_offer' => $this->offers->name
+            'name_offer' => $this->offers->name,
+            'OfferId' => $this->offers->id
 
         ];
         $this->imageUrl=asset('images/product/' . $this->filename);
@@ -64,8 +65,8 @@ class NewOfferCreateNotification extends Notification implements ShouldQueue
     {
         return FcmMessage::create()
             ->setData([
-                'offer' => json_encode($this->offer),
-                'color' => '#FF0000' // تعيين لون الإشعار باللون الأحمر في البيانات
+                'notificationtype' => json_encode($this->offer),
+              
             ])
             ->setNotification(
                 FcmNotification::create()

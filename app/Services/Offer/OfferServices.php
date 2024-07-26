@@ -41,9 +41,9 @@ class OfferServices  extends CRUDServices
             ]);
             $offerId = $offer->id;
             $users = User::all();
-            foreach ($users as $user) {
+            $users->each(function ($user) use ($offer) {
                 $user->notify(new NewOfferCreateNotification($offer));
-            }
+            });
 
             $this->storeOfferdetalis($request, $offerId);
             DB::commit();
