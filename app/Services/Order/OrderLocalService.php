@@ -5,6 +5,7 @@ namespace App\Services\Order;
 use App\Enums\InvoiceStatus;
 use App\Enums\OrderType;
 use App\Enums\StatusTable;
+use App\Events\NewOrder;
 use Throwable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -84,21 +85,20 @@ class OrderLocalService extends CRUDServices
         DB::beginTransaction();
 
         try {
-        $data2['type_id'] = OrderType::LOCAL;
-        $order = Order::create($data2);
-        $order_id = $order->id;
-        if($request->input('offers')){
-        OrderOfferServices::storeOrderOffer($request, $order_id);
-        }
-       $this->addDetalisToOrder($request,$order_id); 
-       $this->calculateTotalPrice($order_id);
-       Db::commit();
-       return ResponseService::success('Order placed successfully');
+            $data2['type_id'] = OrderType::LOCAL;
+            $order = Order::create($data2);
+            $order_id = $order->id;
+            if ($request->input('offers')) {
+                OrderOfferServices::storeOrderOffer($request, $order_id);
+            }
+            event(new NewOrder($order));
+            $this->addDetalisToOrder($request, $order_id);
+            $this->calculateTotalPrice($order_id);
+            Db::commit();
+            return ResponseService::success('Order placed successfully');
         } catch (Throwable $exception) {
             DB::rollBack();
             return ResponseService::error($exception->getMessage(), 'An error occurred');
         }
-    
     }
-
 }
