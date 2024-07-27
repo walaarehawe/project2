@@ -6,6 +6,7 @@ use App\Models\Offers\Offer;
 use App\Models\Offers\Offer_detalis;
 use Throwable;
 use App\HTTP\Responses\ResponseService;
+use App\Jobs\SendNewOfferNotification;
 use App\Models\Order\OrderOffer;
 use App\Models\ProductType;
 use App\Models\User;
@@ -40,10 +41,12 @@ class OfferServices  extends CRUDServices
                 'end_datetime' => $request->end_datetime,
             ]);
             $offerId = $offer->id;
-            $users = User::all();
-            $users->each(function ($user) use ($offer) {
-                $user->notify(new NewOfferCreateNotification($offer));
-            });
+            // $users = User::all();
+            // $users->each(function ($user) use ($offer) {
+            //     $user->notify(new NewOfferCreateNotification($offer));
+            // });
+            $user=User::all();
+            dispatch(new SendNewOfferNotification($offer,$user));
 
             $this->storeOfferdetalis($request, $offerId);
             DB::commit();
