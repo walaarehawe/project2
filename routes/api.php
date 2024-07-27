@@ -99,6 +99,9 @@ Route::post('deleteComment', [RatingController::class, 'deleteComment']);
 
 
 //Auth:
+Route::post('forgetpassword', [RegisterController::class, 'forgetpassword']);
+Route::post('codeforfpass', [RegisterController::class, 'codeforfpass']);
+
 Route::post('code', [RegisterController::class, 'code']);
 Route::post('register', [RegisterController::class, 'register']);
 Route::post('login', [SignInController::class, 'login']);

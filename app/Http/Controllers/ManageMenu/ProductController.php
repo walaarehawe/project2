@@ -18,8 +18,7 @@ class ProductController extends Controller
     }
 
     public function Search(Request $request){
-      return ProductType::where('name','LIKE','%'.$request->name.'%')
-                      ->get();
+      // return ProductType::where('name','LIKE','%'.$request->name.'%'->get();
       
       // return [
       // 'message' => 'show succ',

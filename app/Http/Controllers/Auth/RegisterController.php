@@ -47,7 +47,26 @@ public function code(Request $request){
 }
 
 
+public function codeforfpass (Request $request){
+  $data = [];
+  // $rr['name']=$request->name;
+  $rr['phone']=$request->phone;
+  // $rr['password']=$request->password;
+  if($request->phone){
+    $data = $this->signUpServices->codegenegation($request->phone);
+    return ResponseService::success($rr , $data['data']);
+  }
 
+  return ResponseService::error('number isnot exist', ' ');
+}
+
+public function forgetpassword (Request $request){
+  $user = User::where('phone' , $request->phone)->first();
+$user->password = Hash::make($request['password']);
+$user->save();
+return $user;
+
+}
 
 
 

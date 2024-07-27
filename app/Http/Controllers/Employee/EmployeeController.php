@@ -24,7 +24,7 @@ class EmployeeController extends Controller
  
     public function AddEmployee(Request $request)
    {
-     $path=  $this->productServices->UplodePhoto($request , 'products');
+    //  $path=  $this->productServices->UplodePhoto($request , 'products');
         
      // $data = $this->productServices->Addproducts($request,$path);
         $user = User::Create([
@@ -33,16 +33,16 @@ class EmployeeController extends Controller
           'name'=>$request->name,
      ]);
         $requests['user_id']=$user['id'];
-        $requests['cv_path']=$path;
+        // $requests['cv_path']=$path;
         $requests['active']=1;
-        $role_type=Role::query()->where('name','customer')->first();
+        $role_type=Role::query()->where('name',$request->Role)->first();
         setPermissionsTeamId(1);
         $user->assignRole($role_type);
         $permissions = $role_type->permissions()->pluck('name')->toArray();
         $user ->givePermissionTo($permissions);
         $user->load('roles','permissions'); //to recognize the permissions
         $employee = Employee::Create($requests);
-        if($request->Role == "customer"){
+        if($request->Role == "delivery"){
           $this->AddTranspot($employee->id,$request->transport_id);
         }
 return $employee ;
@@ -57,7 +57,7 @@ return $employee ;
 }
 public function EditEmployee(Request $request)
 {
-  $path=  $this->productServices->UplodePhoto($request , 'products');
+  // $path=  $this->productServices->UplodePhoto($request , 'products');
   $user = User::find($request->id);
 $data['name']=$request->name;
 $data['phone']=$request->phone;

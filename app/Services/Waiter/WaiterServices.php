@@ -11,7 +11,7 @@ use Spatie\Permission\Models\Permission;
 class WaiterServices
 {
   public function ss($request){
-    $waiters=  Role::where('name', 'customer')->first()->users()->with('Employee')->get();
+    $waiters=  Role::where('name', 'waiter')->first()->users()->with('Employee')->get();
     foreach($waiters as $waiter){
     if($waiter->Employee->active){
    $array[] = $waiter->id;

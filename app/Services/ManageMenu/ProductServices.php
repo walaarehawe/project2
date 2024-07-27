@@ -43,7 +43,11 @@ class ProductServices  extends CRUDServices
     ->leftJoin('product_types', 'product_types.Category_id', '=', 'Categories.id')
     ->leftJoin('products', 'products.id', '=', 'product_types.product_id')
     ->get(['product_types.name as product_name','product_types.total_ratings','Products.product_information','Products.product_path','product_types.category_id' , 'Categories.category_name', 'product_types.id']);
- 
+ foreach($data as $product){
+    $comment = Comment::where('product_id',$product->id)->get()->count();
+    $product->comment=$comment;
+    
+ }
     return [
         'message' => 'show with filter succ',
        'data' => $data];
@@ -82,8 +86,8 @@ public function showDetails($request){
     ->leftJoin('products', 'products.id', '=', 'product_types.product_id')
     ->first(['product_types.name as product_name','product_types.price','product_types.total_ratings','product_types.Calories','Products.product_information','Products.product_path','product_types.category_id' , 'Categories.category_name', 'product_types.id']);
     // $data->total_ratings= (double)$data->total_ratings;
-//  $comment = Comment::where('product_id',$data->id)->get()->count();
- 
+ $comment = Comment::where('product_id',$data->id)->get()->count();
+ $data->comment=$comment;
  
     return [
     'message' => 'show succ',

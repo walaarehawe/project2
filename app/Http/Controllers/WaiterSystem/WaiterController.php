@@ -61,7 +61,7 @@ public function changestatus(Request $request)
     }
 }
 public function SelectDelevary(Request $request){
-     $waiters=  Role::where('name', 'customer')->first()->users()->with('Employee.transports')->get();
+     $waiters=  Role::where('name', 'delivery')->first()->users()->with('Employee.transports')->get();
     // $array[] = null;
     foreach($waiters as $waiter){
     if($waiter->Employee->active !=null && $waiter->Employee->transports->transport_id==$request->transport_id){
