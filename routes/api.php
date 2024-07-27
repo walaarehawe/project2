@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Address\CityController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Employee\EmployeeController;
 use App\Http\Controllers\ManageMenu\ProductController;
 use App\Http\Controllers\ManageMenu\CategoryController;
 use App\Http\Controllers\ManageMenu\SectionController;
@@ -23,16 +24,30 @@ use App\Http\Controllers\Offer\OfferController;
 use App\Http\Controllers\Offer\OfferDetailsController;
 use App\Http\Controllers\Order\OrderDetalisController;
 use Illuminate\Support\Facades\Route;
+Route::post('SelectDelevary', [WaiterController::class,'SelectDelevary']);
 
 
 Route::group(['prefix' => 'Auth', 'middleware' => 'auth:sanctum'], function () {
     Route::post('show', [WaiterController::class,'show']);
+    Route::post('changestatus', [WaiterController::class,'changestatus']);
+    Route::post('ss', [WaiterController::class,'ss']);
+    Route::post('ChangeActivity', [EmployeeController::class, 'ChangeActivity']);
+    Route::post('AddEmployee', [EmployeeController::class, 'AddEmployee']);
+    Route::post('ShowEmployee', [EmployeeController::class, 'ShowEmployee']);
+    Route::post('ShowEmployeeDetails', [EmployeeController::class, 'ShowEmployeeDetails']);
+    Route::post('ChangeActivity', [EmployeeController::class, 'ChangeActivity']);
+    Route::post('ChangeEmployeeActivity', [EmployeeController::class, 'ChangeEmployeeActivity']);
 
+    Route::post('EditEmployee', [EmployeeController::class, 'EditEmployee']);
+    
+    Route::post('DeleteEmployee', [EmployeeController::class, 'DeleteEmployee']);
+    
 
 });
+Route::get('ShowallReservation', [ReservaionController::class,'ShowallReservation']);
 
 Route::post('EdituserReservation', [ReservaionController::class,'EdituserReservation']);
-Route::post('ShowuserReservation', [ReservaionController::class,'ShowuserReservation']);
+Route::post('ShowallReservation', [ReservaionController::class,'ShowuserReservation']);
 Route::post('DeleteReservation', [ReservaionController::class,'DeleteReservation']);
 
 Route::post('AddReservation', [ReservaionController::class,'AddReservation']);

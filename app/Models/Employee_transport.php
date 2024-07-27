@@ -5,13 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Transport extends Model
+class Employee_transport extends Model
 {
     use HasFactory;
-
-    public function employees()
-    {
-        return $this->belongsToMany(Employee::class, 'employee_transports');
-    }
     protected $guarded =[];
+    protected $table ='employee_transports';
+
 }

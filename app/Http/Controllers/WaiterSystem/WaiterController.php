@@ -35,10 +35,6 @@ public function show(Request $request){
     try {
 
  $user =Auth::id();
-
-    //     $data = $this->waiterServices->ss($request);
-    //    return ResponseService::success("show succ",$data);
-// echo 9;
 return $order = Waiter::with('order.table')->where('waiter_id',$user)->get();
     } catch (Throwable $exception) {
         return ResponseService::error($exception->getMessage(), 'An error occurred');
@@ -64,6 +60,36 @@ public function changestatus(Request $request)
         return ResponseService::error($exception->getMessage(), 'An error occurred');
     }
 }
+public function SelectDelevary(Request $request){
+     $waiters=  Role::where('name', 'customer')->first()->users()->with('Employee.transports')->get();
+    // $array[] = null;
+    foreach($waiters as $waiter){
+    if($waiter->Employee->active !=null && $waiter->Employee->transports->transport_id==$request->transport_id){
+   $array[] = $waiter->id;
+  }}
+  $lastwaiter = null;
+   $lasts = Waiter::with('user.employee.transports')->where([['jobs',$request->jobs]])->orderBy('id', 'DESC')->get();
+ foreach($lasts as $last){
+    if( $last->user->Employee->transports->transport_id==$request->transport_id){
+    $lastwaiter = $last->user->id;
+    break;}
+  }
+  $index=-1;
+  if($lastwaiter ){
+  $index = array_search($lastwaiter, $array);}
+  echo $index+1;
+  if(count($array) > $index+1){
+    $request['waiter_id'] = $array[$index+1];
 
-
+}
+  else {
+     $request['waiter_id'] =   $array[0];
+  }
+  return  $rr =Waiter::create($request->all(['waiter_id','jobs' , 'order_id'])); 
+  }
+  
+  
+  
+  
+  
 }

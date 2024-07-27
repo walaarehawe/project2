@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services\ManageMenu;
+use App\Models\Review\Comment;
 use Illuminate\Http\JsonResponse;
 use App\Models\Product;
 use App\Models\ProductType;
@@ -41,7 +42,7 @@ class ProductServices  extends CRUDServices
     ->where('category_id','=',$request->id)
     ->leftJoin('product_types', 'product_types.Category_id', '=', 'Categories.id')
     ->leftJoin('products', 'products.id', '=', 'product_types.product_id')
-    ->get(['product_types.name as product_name','Products.total_ratings','Products.product_information','Products.product_path','product_types.category_id' , 'Categories.category_name', 'product_types.id']);
+    ->get(['product_types.name as product_name','product_types.total_ratings','Products.product_information','Products.product_path','product_types.category_id' , 'Categories.category_name', 'product_types.id']);
  
     return [
         'message' => 'show with filter succ',
@@ -79,8 +80,11 @@ public function showDetails($request){
     ->where('product_types.id','=',$request->id)
     ->leftJoin('Categories', 'Categories.id', '=', 'product_types.category_id')
     ->leftJoin('products', 'products.id', '=', 'product_types.product_id')
-    ->first(['product_types.name as product_name','product_types.price','products.total_ratings','product_types.Calories','Products.product_information','Products.product_path','product_types.category_id' , 'Categories.category_name', 'product_types.id']);
+    ->first(['product_types.name as product_name','product_types.price','product_types.total_ratings','product_types.Calories','Products.product_information','Products.product_path','product_types.category_id' , 'Categories.category_name', 'product_types.id']);
     // $data->total_ratings= (double)$data->total_ratings;
+//  $comment = Comment::where('product_id',$data->id)->get()->count();
+ 
+ 
     return [
     'message' => 'show succ',
     'data' => $data];
