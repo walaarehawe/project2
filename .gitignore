@@ -5,8 +5,6 @@
 /public/storage
 /storage/*.key
 /vendor
-/restaurantappnotifiy-b4f25cd12f2a.json
-/public/
 .env
 .env.backup
 .env.production
