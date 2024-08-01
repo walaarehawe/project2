@@ -36,7 +36,7 @@ class Order extends Model
     {
         return $this->hasOne(OrderTable::class);
     }
- 
+
     // public function offers()
     // {
     //     return $this->hasMany(OrderOffer::class);
@@ -45,4 +45,7 @@ class Order extends Model
     {
         return $this->belongsToMany(Offer::class,'order_offers','order_id','offer_id');
     }
+
+
+
 }

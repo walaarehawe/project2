@@ -42,7 +42,16 @@ return $order = Waiter::with('order.table')->where('waiter_id',$user)->get();
 }
 
 
+public function showdel(Request $request){
 
+    try {
+
+ $user =Auth::id();
+return $order = Waiter::with('order.orderExternal.userAddress')->where('waiter_id',$user)->get();
+    } catch (Throwable $exception) {
+        return ResponseService::error($exception->getMessage(), 'An error occurred');
+    }
+}
 
 
 
@@ -77,7 +86,7 @@ public function SelectDelevary(Request $request){
   $index=-1;
   if($lastwaiter ){
   $index = array_search($lastwaiter, $array);}
-  echo $index+1;
+//   echo $index+1;
   if(count($array) > $index+1){
     $request['waiter_id'] = $array[$index+1];
 

@@ -54,7 +54,7 @@ class RatingController extends Controller
   
 
       public function EditComment(Request $request){
-         $product = Comment::find($request->id)->first();
+         $product = Comment::find($request->id);
         $token = PersonalAccessToken::findToken($request->bearerToken());
         if($product->user_id = $token->tokenable->id){
           $data = $this->commentServices->update($product->id,$request->all());
