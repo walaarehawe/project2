@@ -63,8 +63,16 @@ public function childAddresses()
 }
 
 
+
   public function Employee()
     {
         return $this->hasOne(Employee::class);
     }
+
+public function deviceTokens(){
+    return $this->hasMany(DeviceToken::class);
 }
+public function routeNotificationForFcm(){
+    return $this->deviceTokens()->pluck('device_token')->toArray();
+}
+

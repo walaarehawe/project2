@@ -9,4 +9,8 @@ class TransportationCost extends Model
 {
     use HasFactory;
     protected $guarded =[];
+    public function transport()
+    {
+        return $this->belongsTo(Transport::class);
+    }
 }

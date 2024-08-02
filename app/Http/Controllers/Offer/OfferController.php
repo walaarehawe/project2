@@ -46,6 +46,7 @@ class OfferController extends Controller
         // $data = $request->all();
         // $offer = Offer::create($data);
         // return $offer;
+
     }
 
 

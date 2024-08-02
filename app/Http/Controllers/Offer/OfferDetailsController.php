@@ -13,8 +13,8 @@ use Illuminate\Http\Request;
 class OfferDetailsController extends Controller
 {
     private OfferDetalisServices $OfferDetalis;
-  
-    public function __construct( OfferDetalisServices $offer)
+
+    public function __construct(OfferDetalisServices $offer)
     {
         $this->OfferDetalis = $offer;
     }
@@ -32,36 +32,58 @@ class OfferDetailsController extends Controller
             }])
             ->get();
     }
-   
 
 
-   
+
+
     public function show(Request $request)
     {
-        
-         $user = Offer::find($request->id);
-        if(!$user->details1()->exists()){
-            return 'العرض لا يتضمن تفاصيل';
+
+        try {
+            $offer = Offer::with(['details4.productType.product'])->find($request->id);
+            $response = [];
+
+            foreach ($offer->details4 as $detail) {
+                $productType = $detail->productType;
+                $product = $detail->productType->product;
+                $response[] = [
+                    'id' => $detail->id,
+                    'amount' => $detail->amount,
+                    'name' => isset($productType) ? $productType->name : null,
+                    'Calories' => $productType->Calories,
+                    'photo' => $product->product_path,
+                ];
+            }
+            $response = [
+                'name_offer' => $offer->name,
+                'status_offer'=>$offer->status_offer,
+                'start_datetime' => $offer->start_datetime,
+                'end_datetime'=>$offer->end_datetime,
+                'total_price'=>$offer->total_price,
+                $response
+            
+            ];
+            return $response;
+            return ResponseService::success($response);
+        } catch (Throwable $exception) {
+            return ResponseService::error($exception->getMessage(), 'An error occurred');
         }
-        
-        return $user->details1;
     }
 
-   
     public function update(Request $request)
     {
 
-        try{
-            $data = $this->OfferDetalis->update($request['id'] , $request->all());
-            return ResponseService::success(' ' , ' تم التحديث بنجاح');
-           }
-            catch (Throwable $exception) {
-            return ResponseService::error( $exception->getMessage() , 'An error occurred');
-           }
+        try {
+            $data = $this->OfferDetalis->update($request['id'], $request->all());
+            return ResponseService::success(' ', ' تم التحديث بنجاح');
+        } catch (Throwable $exception) {
+            return ResponseService::error($exception->getMessage(), 'An error occurred');
+        }
     }
 
-    public function Delete(Request $request){
-        $data =$this->OfferDetalis->delete($request);
-        return ResponseService::success($data['message'] , $data['data']);
-      }
+    public function Delete(Request $request)
+    {
+        $data = $this->OfferDetalis->delete($request);
+        return ResponseService::success($data['message'], $data['data']);
+    }
 }

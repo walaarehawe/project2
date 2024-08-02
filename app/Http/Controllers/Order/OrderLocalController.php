@@ -9,17 +9,19 @@ use App\Http\Controllers\Controller;
 use App\Models\Order\OrderDetalis;
 use Illuminate\Http\Request;
 use App\Services\Order\OrderLocalService;
+
 class OrderLocalController extends Controller
 {
 
-    private OrderLocalService  $order;
+  private OrderLocalService  $order;
 
 
-    public function __construct(OrderLocalService $order)
-    {
-      $this->order = $order;
-    }
-    public function store(Request $request){
-   return     $order_id=$this->order->store($request);
-    }
+  public function __construct(OrderLocalService $order)
+  {
+    $this->order = $order;
+  }
+  public function store(Request $request)
+  {
+    return     $order_id = $this->order->store($request);
+  }
 }

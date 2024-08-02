@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('order_external_users', function (Blueprint $table) {
             $table->id();
-           $table->foreignId('user_address_id')->constrained('user_addresses')->onDelete('cascade');
+            $table->foreignId('user_address_id')->constrained('user_addresses')->onDelete('cascade');
             $table->integer('order_id')->unsigned();
             $table->foreign('order_id')->references('id')->on('orders');
             $table->timestamps();

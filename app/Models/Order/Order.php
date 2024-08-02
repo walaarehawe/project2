@@ -3,7 +3,9 @@
 namespace App\Models\Order;
 
 use App\Models\Address\UserAddress;
+use App\Models\Notes;
 use App\Models\Offers\Offer;
+use App\Models\Order\Notes as OrderNotes;
 use App\Models\ProductType;
 use App\Models\Table\Table;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -37,13 +39,19 @@ class Order extends Model
         return $this->hasOne(OrderTable::class);
     }
 
+    public function notes()
+    {
+        return $this->hasOne(OrderNotes::class);
+    }
+ 
+
     // public function offers()
     // {
     //     return $this->hasMany(OrderOffer::class);
     // }
     public function offers()
     {
-        return $this->belongsToMany(Offer::class,'order_offers','order_id','offer_id');
+        return $this->belongsToMany(Offer::class,'order_offers','order_id','offer_id')->withPivot('amount');
     }
 
 
