@@ -23,7 +23,11 @@ use App\Http\Controllers\Offer\OfferController;
 use App\Http\Controllers\Offer\OfferDetailsController;
 use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Order\OrderDetalisController;
+
 use App\Http\Controllers\Order\OrderSearchController;
+
+use App\Http\Controllers\Pusher\PusherController;
+
 use Illuminate\Support\Facades\Route;
 Route::post('SelectDelevary', [WaiterController::class,'SelectDelevary']);
 
@@ -179,4 +183,6 @@ Route::group(['prefix' => 'search'], function () {
 Route::group(['prefix' => 'DeviceToken', 'middleware' => 'auth:sanctum'], function () {
     Route::post('deviceToken', [DeviceTokenController::class, 'store']);
 });
+
+Route::post('pusher', [PusherController::class,'pusher']);
 
